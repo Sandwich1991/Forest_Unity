@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -91,19 +92,22 @@ public class UIManager
         Managers.Resource.Destroy(_barrier.name);
     }
 
-    // 말 풍선 UI를 화면에 출력
-    public GameObject Says<T> (GameObject go, T content)
+    // 말 풍선 UI를 화면에 출력 (스트링)
+    public GameObject Says (GameObject go, string text)
     {
-        GameObject worldSpaceCanvas = GameObject.Find("@WorldSpaceCanvas");
-        if (worldSpaceCanvas == null)
-            SetWorldSpaceCanvas();
+        string name = go.name;
+        
+        GameObject existBubble = GameObject.Find($"{name}'s Bubble");
 
-        if (typeof(T) == typeof(String))
+        if (existBubble == null)
         {
-            string text = content.ToString();
+            GameObject worldSpaceCanvas = GameObject.Find("@WorldSpaceCanvas");
+            if (worldSpaceCanvas == null)
+                SetWorldSpaceCanvas();
 
             GameObject bubble =
                 Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Bubble", worldSpaceCanvas.transform);
+            bubble.name = $"{name}'s Bubble";
 
             Text textComponent = Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Text", bubble.transform)
                 .GetComponent<Text>();
@@ -111,14 +115,33 @@ public class UIManager
 
             bubble.transform.position = go.transform.position +
                                         Vector3.up * (go.transform.GetComponent<Collider>().bounds.size.y + 0.5f);
-            bubble.transform.rotation = Camera.main.transform.rotation;
+            bubble.transform.rotation = GameObject.Find("Main Camera").transform.rotation;
 
             return bubble;
         }
-        else
-            return null;
+
+        return null;
     }
     
-    // 일시 정지 화면 만들기
+    // 말 풍선 UI를 화면에 출력 (스프라이트)
+    public GameObject Says (GameObject go, Sprite img)
+    {
+        GameObject worldSpaceCanvas = GameObject.Find("@WorldSpaceCanvas");
+        if (worldSpaceCanvas == null)
+            SetWorldSpaceCanvas();
+
+        GameObject bubble =
+            Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Bubble", worldSpaceCanvas.transform);
+
+        Image textComponent = Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Image", bubble.transform)
+            .GetComponent<Image>();
+        textComponent.sprite = img;
+
+        bubble.transform.position = go.transform.position +
+                                    Vector3.up * (go.transform.GetComponent<Collider>().bounds.size.y + 0.5f);
+        bubble.transform.rotation = GameObject.Find("Main Camera").transform.rotation;
+
+        return bubble;
+    }
     
 }

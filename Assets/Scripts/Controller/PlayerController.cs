@@ -35,17 +35,11 @@ public class PlayerController : MonoBehaviour
             _desPos = hit.point;
             _state = Define.State.Move;
         }
-        else if (hit.collider.CompareTag("NPC")) // NPC를 클릭할 경우
+        
+        else if (hit.collider.tag == "NPC" && evt == Define.MouseEvent.Click)
         {
-            _desPos = hit.collider.transform.position + Vector3.back * 1.2f;
-            _state = Define.State.Move;
-            if ((hit.collider.transform.position - transform.position).magnitude <= 10f)
-            {
-                NPCController controller = hit.collider.GetComponent<NPCController>();
-                if (controller == null)
-                    controller = hit.collider.AddComponent<NPCController>();
-                controller.Greetings();
-            }
+            NPCController controller = hit.collider.GetComponent<NPCController>();
+            controller.Greetings();
         }
     }
     

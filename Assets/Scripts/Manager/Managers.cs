@@ -50,6 +50,7 @@ public class Managers : MonoBehaviour
                 // 코어 매니져의 init 메소드 실행
                 m_instance._sound.init();
                 m_instance._ui.init();
+                m_instance._event.init();
             }
         }
     }

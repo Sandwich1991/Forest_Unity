@@ -11,6 +11,7 @@ public class LoginScene : BaseScene
         SceneType = Define.Scene.Login;
         Managers.Resource.Instantiate("UI/MainUI/LoginScreen");
         Managers.Input.MouseAction += OnMouse;
+        Managers.Sound.Play("Sounds/Bgm/Main", Define.Sound.Bgm);
     }
 
     public override void Clear()

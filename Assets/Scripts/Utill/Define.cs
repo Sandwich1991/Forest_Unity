@@ -18,6 +18,7 @@ public class Define
     
     public enum CameraMode
     {
+        OnEvent,
         QuarterView,
         TopView,
     }
