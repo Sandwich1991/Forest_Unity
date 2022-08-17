@@ -17,6 +17,7 @@ public class Managers : MonoBehaviour
     private UIManager _ui = new UIManager();
     private SceneManagerEx _scene = new SceneManagerEx();
     private EventManager _event = new EventManager();
+    private ChatManager _chat = new ChatManager();
     
     
     /**********************************************************************/
@@ -28,6 +29,7 @@ public class Managers : MonoBehaviour
     public static UIManager UI { get; } = Instance._ui;
     public static SceneManagerEx Scene { get; } = Instance._scene;
     public static EventManager Event { get; } = Instance._event;
+    public static ChatManager Chat { get; } = Instance._chat;
 
 
     /**********************************************************************/

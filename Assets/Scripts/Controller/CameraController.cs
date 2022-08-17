@@ -8,27 +8,46 @@ public class CameraController : MonoBehaviour
     /**********************************************************************/
     // Fields
     
-    // 카메라 모드
-    public Define.CameraMode _mode;
-    [SerializeField] private GameObject _player;
+    public Define.CameraMode _mode; // 카메라 모드
+    public Define.CameraSubject _subject; // 카메라 피사체 열거형
+    public GameObject _currentSubject; // 현재 카메라 피사체
+
+    private GameObject _player;
+    private GameObject _npc;
 
     /**********************************************************************/
     // Methods
-    
+
+    public void GetSubject()
+    {
+        switch (_subject)
+        {
+            case Define.CameraSubject.Player:
+                _currentSubject = _player;
+                break;
+            
+            case Define.CameraSubject.NPC:
+                _currentSubject = _npc;
+                break;
+        }
+    }
+
     void SetQuarterView()
     {
+        GetSubject();
         Vector3 deltaPos = new Vector3(0f, 8f, -4f);
         
-        transform.position = _player.transform.position + deltaPos;
-        transform.LookAt(_player.transform);
+        transform.position = _currentSubject.transform.position + deltaPos;
+        transform.LookAt(_currentSubject.transform);
     }
     
     void SetTopView()
     {
+        GetSubject();
         Vector3 deltaPos = new Vector3(0f, 6f, 0f);
         Vector3 deltaRot = new Vector3(90f, 0f, 0f);
         
-        transform.position = _player.transform.position + deltaPos;
+        transform.position = _currentSubject.transform.position + deltaPos;
         transform.rotation = Quaternion.Euler(deltaRot);
     }
 
@@ -45,9 +64,10 @@ public class CameraController : MonoBehaviour
         return _mode;
     }
 
+    // 애니메이션 이벤트 종료
     public void SceneEnd()
     {
-        Managers.Event.SceneEnd.Invoke();
+        Managers.Event.EventState.Invoke(Define.AnimationEvent.Null);
     }
     
     /**********************************************************************/
@@ -55,8 +75,11 @@ public class CameraController : MonoBehaviour
     
     void Start()
     {
+        _subject = Define.CameraSubject.Player;
         _mode = Define.CameraMode.QuarterView;
+        
         _player = GameObject.Find("Player");
+        _npc = GameObject.Find("NPC");
     }
     
     void LateUpdate()

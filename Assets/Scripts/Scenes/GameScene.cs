@@ -9,6 +9,7 @@ public class GameScene : BaseScene
     {
         
     }
+    
     protected override void init()
     {
         base.init();
@@ -17,6 +18,4 @@ public class GameScene : BaseScene
         Managers.UI.SetWorldSpaceCanvas();
         Managers.Input.KeyAction += SwitchGameState;
     }
-    
-    
 }

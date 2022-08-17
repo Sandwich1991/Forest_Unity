@@ -32,8 +32,6 @@ public class InputManager
     {
         if (InputOn)
         {
-            
-            
             if (Input.anyKey && KeyAction != null)
                 KeyAction.Invoke();
             

@@ -3,30 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnterForest : MonoBehaviour
+public class EnterForest : BaseEvent
 {
-    private GameObject _player;
-    private Camera _camera;
-    private Animator _animator;
-
-    private void Start()
+    protected override void OnTriggerEnter(Collider other)
     {
-        _player = GameObject.Find("Player");
-        _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        _animator = _camera.gameObject.GetComponent<Animator>();
-
-        Managers.Event.SceneEnd += EventEnd;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Managers.Event.CameraEventOn();
-        _animator.Play("ForestEnter");
-    }
-
-    void EventEnd()
-    {
-        Managers.Event.CameraEventOff();
-        Destroy(gameObject);
+        Managers.Event.EventState.Invoke(Define.AnimationEvent.EnterForest);
+        
+        _player.GetComponent<PlayerController>().State = Define.State.Idle;
+        _cameraAnimator.Play("ForestEnter");
+        gameObject.SetActive(false);
     }
 }

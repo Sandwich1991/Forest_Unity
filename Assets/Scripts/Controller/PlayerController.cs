@@ -5,20 +5,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseController
 {
     /**********************************************************************/
     // Fields
     
-    // 이동 및 조작
-    private Vector3 _desPos; // 플레이어 이동 목적지
-    private Camera _camera;
-    [SerializeField] private float _speed = 5f; // 이동 속도
-
-    // 플레이어 애니메이션
-    private Define.State _state = Define.State.Idle; // 플레이어 상태
-    private Animator _animator;
-
     /**********************************************************************/
     // Methods
     
@@ -33,7 +24,7 @@ public class PlayerController : MonoBehaviour
         if (hit.collider.gameObject.layer == (int)Define.Layer.Ground) // 지면을 클릭할 경우
         {
             _desPos = hit.point;
-            _state = Define.State.Move;
+            State = Define.State.Move;
         }
         
         else if (hit.collider.tag == "NPC" && evt == Define.MouseEvent.Click)
@@ -43,25 +34,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    void UpdateIdle()
-    {
-        // Idle 애니메이션 실행
-        _animator.CrossFade("Idle", 0.05f);
-    }
-    
-    void UpdateMove()
+    protected override void UpdateMove()
     {
         Vector3 vec = _desPos - transform.position; // 플레이어가 목적지까지 가야할 거리와 방향
 
         // 목적지에 도착하면 플레이어 상태 Idle로 변경
         if (vec.magnitude < 0.5f)
-            _state = Define.State.Idle;
+            State = Define.State.Idle;
         else
         {
             if (Physics.Raycast(transform.position, vec, 1f, LayerMask.GetMask("Block")))
             {
                 if (Input.GetMouseButton(0) == false)
-                    _state = Define.State.Idle;
+                    State = Define.State.Idle;
                 return;
             }
             
@@ -79,33 +64,12 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // 이동시 효과를 주기위한 메소드
-    public void OnWalk()
-    {
-        Managers.Sound.Play("Sounds/FootStep/Step");
-    }
     /**********************************************************************/
     // Game System
-    void Start()
+    protected override void init()
     {
-        _camera = Camera.main; // 메인 카메라 불러옴
-        _animator = GetComponent<Animator>(); // 애니메이터 컴포넌트 불러옴
-
         Managers.Input.MouseAction += OnMouse; // 인풋 매니져를 통해 마우스 이벤트 콜백을 받음
-    }
-    
-    void Update()
-    {
-        // 플레이어 상태를 실시간으로 확인
-        switch (_state)
-        {
-            case Define.State.Idle:
-                UpdateIdle();
-                break;
-
-            case Define.State.Move:
-                UpdateMove();
-                break;
-        }
+        _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        _animator = GetComponent<Animator>();
     }
 }

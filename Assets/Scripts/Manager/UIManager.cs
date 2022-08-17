@@ -38,17 +38,19 @@ public class UIManager
     }
     
     // 월드 스페이스 캔버스 생성
-    public void SetWorldSpaceCanvas()
+    public GameObject SetWorldSpaceCanvas()
     {
         GameObject go = GameObject.Find("@WorldSpaceCanvas");
         if (go == null)
+        {
             go = new GameObject { name = "@WorldSpaceCanvas" };
-        Canvas canvas = go.AddComponent<Canvas>();
-        go.AddComponent<CanvasScaler>();
-        go.AddComponent<GraphicRaycaster>();
-
-        canvas.renderMode = RenderMode.WorldSpace;
-        canvas.worldCamera = Camera.main;
+            Canvas canvas = go.AddComponent<Canvas>();
+            go.AddComponent<CanvasScaler>();
+            go.AddComponent<GraphicRaycaster>();
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.worldCamera = Camera.main;
+        }
+        return go;
     }
     
     // 메인 UI 켜기
@@ -90,58 +92,6 @@ public class UIManager
         if (_barrier == null)
             return;
         Managers.Resource.Destroy(_barrier.name);
-    }
-
-    // 말 풍선 UI를 화면에 출력 (스트링)
-    public GameObject Says (GameObject go, string text)
-    {
-        string name = go.name;
-        
-        GameObject existBubble = GameObject.Find($"{name}'s Bubble");
-
-        if (existBubble == null)
-        {
-            GameObject worldSpaceCanvas = GameObject.Find("@WorldSpaceCanvas");
-            if (worldSpaceCanvas == null)
-                SetWorldSpaceCanvas();
-
-            GameObject bubble =
-                Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Bubble", worldSpaceCanvas.transform);
-            bubble.name = $"{name}'s Bubble";
-
-            Text textComponent = Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Text", bubble.transform)
-                .GetComponent<Text>();
-            textComponent.text = text;
-
-            bubble.transform.position = go.transform.position +
-                                        Vector3.up * (go.transform.GetComponent<Collider>().bounds.size.y + 0.5f);
-            bubble.transform.rotation = GameObject.Find("Main Camera").transform.rotation;
-
-            return bubble;
-        }
-
-        return null;
-    }
-    
-    // 말 풍선 UI를 화면에 출력 (스프라이트)
-    public GameObject Says (GameObject go, Sprite img)
-    {
-        GameObject worldSpaceCanvas = GameObject.Find("@WorldSpaceCanvas");
-        if (worldSpaceCanvas == null)
-            SetWorldSpaceCanvas();
-
-        GameObject bubble =
-            Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Bubble", worldSpaceCanvas.transform);
-
-        Image textComponent = Managers.Resource.Instantiate("UI/WorldSpace/ChatBubble/Image", bubble.transform)
-            .GetComponent<Image>();
-        textComponent.sprite = img;
-
-        bubble.transform.position = go.transform.position +
-                                    Vector3.up * (go.transform.GetComponent<Collider>().bounds.size.y + 0.5f);
-        bubble.transform.rotation = GameObject.Find("Main Camera").transform.rotation;
-
-        return bubble;
     }
     
 }

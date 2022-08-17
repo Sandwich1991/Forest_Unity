@@ -44,4 +44,17 @@ public class Define
         Game,
     }
     
+    public enum CameraSubject
+    {
+        Player,
+        NPC,
+    }
+    
+    public enum AnimationEvent
+    {
+        Null,
+        EnterForest,
+        BearAppear,
+    }
+    
 }
